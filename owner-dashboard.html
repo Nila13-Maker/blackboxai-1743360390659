@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NJOURNEY - Owner Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .alert {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-4xl mx-auto p-4">
+        <header class="bg-[#1A202C] p-4 rounded-t-lg flex items-center">
+            <img 
+                src="https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=1200&h=700&dpr=1" 
+                alt="NJourney Logo" 
+                class="w-16 h-16 rounded-full mr-4"
+            />
+            <h1 class="text-2xl text-white font-bold">NJOURNEY Owner Dashboard</h1>
+        </header>
+
+        <div class="bg-white p-6 rounded-b-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 border-b pb-2">Vehicle Maintenance Logs</h2>
+            
+            <div id="maintenance-logs" class="space-y-4">
+                <!-- Sample log entry (would be populated via WebSocket in real app) -->
+                <div class="p-4 border rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold">Vehicle Check</h3>
+                        <span class="text-sm text-gray-500">Just now</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-gray-600">Oil:</span>
+                            <span class="font-medium ml-2">50%</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Water:</span>
+                            <span class="font-medium ml-2">50%</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Fuel:</span>
+                            <span class="font-medium ml-2">50%</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Tires:</span>
+                            <span class="font-medium ml-2">32 PSI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/scripts/socket.js"></script>
+    <script>
+        // Listen for maintenance updates
+        socket.on('maintenance-data', (data) => {
+            const logEntry = `
+                <div class="p-4 border rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold">Vehicle Check</h3>
+                        <span class="text-sm text-gray-500">${data.timestamp}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-gray-600">Oil:</span>
+                            <span class="font-medium ml-2">${data.oil}%</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Water:</span>
+                            <span class="font-medium ml-2">${data.water}%</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Fuel:</span>
+                            <span class="font-medium ml-2">${data.fuel}%</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Tires:</span>
+                            <span class="font-medium ml-2">${data.tire} PSI</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('maintenance-logs').insertAdjacentHTML('afterbegin', logEntry);
+        });
+    </script>
+</body>
+</html>
